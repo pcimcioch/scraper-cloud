@@ -4,12 +4,14 @@ services:
     build: config-server
     ports:
      - "8888:8888"
+
   discovery-server:
     build: discovery-server
     ports:
      - "8761:8761"
     depends_on:
      - config-server
+
   scheduler-service:
     build: scheduler-service
     ports:
