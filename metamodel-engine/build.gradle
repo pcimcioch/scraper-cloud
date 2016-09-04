@@ -1,0 +1,9 @@
+jar {
+    baseName = 'metamodel-engine'
+    version = '0.1.0'
+}
+
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-annotations:2.8.1"
+    compile project(':common-java')
+}

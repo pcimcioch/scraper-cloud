@@ -1,0 +1,11 @@
+apply plugin: 'spring-boot'
+
+jar {
+    baseName = 'scheduler-service'
+    version = '0.1.0'
+}
+
+dependencies {
+    compile "org.springframework.cloud:spring-cloud-starter-eureka:1.1.5.RELEASE"
+    compile project(':common-java')
+}

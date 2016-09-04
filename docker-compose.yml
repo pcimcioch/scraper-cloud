@@ -1,0 +1,19 @@
+version: '2'
+services:
+  config-server:
+    build: config-server
+    ports:
+     - "8888:8888"
+  discovery-server:
+    build: discovery-server
+    ports:
+     - "8761:8761"
+    depends_on:
+     - config-server
+  scheduler-service:
+    build: scheduler-service
+    ports:
+     - "8080:8080"
+    depends_on:
+     - config-server
+     - discovery-server
