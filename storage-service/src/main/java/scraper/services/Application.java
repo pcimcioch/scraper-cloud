@@ -2,13 +2,13 @@ package scraper.services;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
- * Eureka discovery server.
+ * Service responsible for storing and accessing files.
  */
 @SpringBootApplication
-@EnableEurekaServer
+@EnableDiscoveryClient
 public class Application {
 
     public static void main(String[] args) {

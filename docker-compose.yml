@@ -11,11 +11,23 @@ services:
      - "8761:8761"
     depends_on:
      - config-server
+ 
+  main-gateway:
+    build: main-gateway
+    ports:
+     - "8080:8080"
+    depends_on:
+     - config-server
+     - discovery-server
 
   scheduler-service:
     build: scheduler-service
-    ports:
-     - "8080:8080"
+    depends_on:
+     - config-server
+     - discovery-server
+
+  storage-service:
+    build: storage-service
     depends_on:
      - config-server
      - discovery-server

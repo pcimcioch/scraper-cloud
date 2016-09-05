@@ -1,0 +1,9 @@
+jar {
+    baseName = 'common-service'
+    version = '0.1.0'
+}
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter-web:1.4.0.RELEASE"
+    compile project(':common-java')
+}

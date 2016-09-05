@@ -1,9 +1,12 @@
 package scraper.common;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Utility class for file operations.
@@ -99,5 +102,28 @@ public final class FileUtils {
     public static String readFile(Path path, Charset encoding) throws IOException {
         byte[] encoded = Files.readAllBytes(path);
         return new String(encoded, encoding);
+    }
+
+    /**
+     * Computes {@code file} sha-256 hash
+     *
+     * @param file file
+     * @return sha of the {@code file}
+     * @throws NoSuchAlgorithmException if could not find sha-256 algorithm
+     * @throws IOException              if io failed
+     */
+    // TODO add tests
+    public static String computeSHA2(Path file) throws NoSuchAlgorithmException, IOException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+
+        byte[] dataBytes = new byte[1024];
+        int nread = 0;
+        try (InputStream is = Files.newInputStream(file)) {
+            while ((nread = is.read(dataBytes)) != -1) {
+                md.update(dataBytes, 0, nread);
+            }
+        }
+
+        return StringUtils.bytesToHex(md.digest());
     }
 }

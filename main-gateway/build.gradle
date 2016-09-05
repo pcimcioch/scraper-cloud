@@ -1,11 +1,12 @@
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'scheduler-service'
+    baseName = 'main-gateway'
     version = '0.1.0'
 }
 
 dependencies {
+    compile "org.springframework.cloud:spring-cloud-starter-zuul:1.1.5.RELEASE"
     compile "org.springframework.cloud:spring-cloud-starter-eureka:1.1.5.RELEASE"
-    compile project(':common-service')
+	compile project(':common-service')
 }

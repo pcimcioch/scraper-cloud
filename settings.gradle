@@ -1,5 +1,10 @@
 include 'config-server'
 include 'discovery-server'
-include 'scheduler-service'
+include 'main-gateway'
+
 include 'common-java'
+include 'common-service'
 include 'metamodel-engine'
+
+include 'storage-service'
+include 'scheduler-service'

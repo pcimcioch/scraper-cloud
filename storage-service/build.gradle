@@ -1,7 +1,7 @@
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'scheduler-service'
+    baseName = 'storage-service'
     version = '0.1.0'
 }
 
