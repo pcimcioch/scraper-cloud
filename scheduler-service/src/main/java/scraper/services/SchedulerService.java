@@ -1,8 +1,11 @@
 package scraper.services;
 
+import org.springframework.stereotype.Service;
+
 import java.util.Arrays;
 import java.util.List;
 
+@Service
 public class SchedulerService {
 
     public List<ScheduleJsonDto> getSchedules() {
