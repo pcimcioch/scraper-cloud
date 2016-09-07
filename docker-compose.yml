@@ -11,6 +11,9 @@ services:
      - "8761:8761"
     depends_on:
      - config-server
+
+  neo4j-data:
+    image: neo4j:3.0.4
  
   main-gateway:
     build: main-gateway
@@ -28,6 +31,12 @@ services:
 
   storage-service:
     build: storage-service
+    depends_on:
+     - config-server
+     - discovery-server
+
+  chan-collector-service:
+    build: chan-collector-service
     depends_on:
      - config-server
      - discovery-server

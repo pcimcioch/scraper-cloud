@@ -1,4 +1,4 @@
-package scraper.services;
+package scraper.services.scheduler;
 
 import org.springframework.stereotype.Service;
 

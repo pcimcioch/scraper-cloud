@@ -1,4 +1,4 @@
-package scraper.services;
+package scraper.services.storage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;

@@ -82,6 +82,7 @@ public final class StringUtils {
 
     /**
      * Converts byte array to hex formatted string
+     *
      * @param bytes byte array
      * @return string in hex format
      */
@@ -94,5 +95,49 @@ public final class StringUtils {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    /**
+     * Parses string as integer safely. Will not throw {@link NumberFormatException}. Instead it will return null.
+     *
+     * @param val value to parse as integer. May be <tt>null</tt>
+     * @return integer value or null if it cannot be parsed
+     */
+    // TODO add tests
+    public static Integer toInteger(String val) {
+        try {
+            return Integer.valueOf(val);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    /**
+     * Splits given {@code val} by {@code delimiterRegex}. Then selects splitted blocks by {@code indexes} and joins them using {@joinSequence}. If any index is incorrect, it will
+     * be omitted.
+     *
+     * @param val            string value to process
+     * @param delimiterRegex delimiter regex used to split given value
+     * @param joinSequence   string used to join splitted blocks
+     * @param indexes        indexes of the blocks to join
+     * @return new string
+     */
+    // TODO add tests
+    public static String splitAndJoin(String val, String delimiterRegex, String joinSequence, int... indexes) {
+        String[] splitted = val.split(delimiterRegex);
+
+        StringBuilder joined = new StringBuilder();
+        boolean first = true;
+        for (int index : indexes) {
+            if (index >= 0 && index < splitted.length) {
+                joined.append(splitted[index]);
+                if (!first) {
+                    joined.append(joinSequence);
+                }
+                first = false;
+            }
+        }
+
+        return joined.toString();
     }
 }

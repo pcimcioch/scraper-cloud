@@ -1,4 +1,4 @@
-package scraper.services;
+package scraper.services.scheduler;
 
 import scraper.common.Utils;
 

@@ -1,5 +1,8 @@
-package scraper.services;
+package scraper.services.storage;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import scraper.common.FileUtils;
 import scraper.exception.ResourceNotFoundException;
@@ -16,10 +19,15 @@ import java.security.NoSuchAlgorithmException;
  * Service used for storing and accessing files.
  */
 @Service
+@RefreshScope
 public class StorageService {
 
-    // TODO from environment
-    private static final String DATA_DIR = "data";
+    private final String dataDir;
+
+    @Autowired
+    public StorageService(@Value("${scraper.service.storage.dir:data}") String dataDir) {
+        this.dataDir = dataDir;
+    }
 
     /**
      * Saves file.
@@ -64,7 +72,7 @@ public class StorageService {
         String firstTwoChars = sha.substring(0, 2);
         String secondTwoChars = sha.substring(2, 4);
 
-        return Paths.get(DATA_DIR, firstTwoChars, secondTwoChars, sha);
+        return Paths.get(dataDir, firstTwoChars, secondTwoChars, sha);
     }
 
     /**
