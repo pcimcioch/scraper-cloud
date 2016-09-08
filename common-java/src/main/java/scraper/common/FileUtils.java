@@ -15,6 +15,8 @@ public final class FileUtils {
 
     private static final String FORBIDDEN_CHARS_REGEX = "[<>:\"/\\\\|\\?\\*]";
 
+    private static final int BLOCK_SIZE = 1024;
+
     private FileUtils() {
     }
 
@@ -116,8 +118,8 @@ public final class FileUtils {
     public static String computeSHA2(Path file) throws NoSuchAlgorithmException, IOException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
 
-        byte[] dataBytes = new byte[1024];
-        int nread = 0;
+        byte[] dataBytes = new byte[BLOCK_SIZE];
+        int nread;
         try (InputStream is = Files.newInputStream(file)) {
             while ((nread = is.read(dataBytes)) != -1) {
                 md.update(dataBytes, 0, nread);

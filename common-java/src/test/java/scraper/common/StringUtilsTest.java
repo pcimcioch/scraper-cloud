@@ -68,4 +68,35 @@ public class StringUtilsTest {
         assertEquals("aaa", StringUtils.getSingleMatch("foo=aaa bar=123", "foo=([a-zA-Z]+) bar=([0-9]+)", 1, "default"));
         assertEquals("123", StringUtils.getSingleMatch("foo=aaa bar=123", "foo=([a-zA-Z]+) bar=([0-9]+)", 2, "default"));
     }
+
+    @Test
+    public void testBytesToText() {
+        assertEquals("", StringUtils.bytesToHex(new byte[]{}));
+        assertEquals("16007FFF", StringUtils.bytesToHex(new byte[]{22, 0, 127, (byte) 255}));
+        assertEquals("2B4E0C63", StringUtils.bytesToHex(new byte[]{43, 78, 12, 99}));
+    }
+
+    @Test
+    public void testToInteger() {
+        assertEquals(Integer.valueOf(123), StringUtils.toInteger("123"));
+        assertEquals(Integer.valueOf(0), StringUtils.toInteger("0"));
+        assertEquals(Integer.valueOf(-12), StringUtils.toInteger("-12"));
+    }
+
+    @Test
+    public void testToInteger_incorrectValues() {
+        assertNull(StringUtils.toInteger(null));
+        assertNull(StringUtils.toInteger(""));
+        assertNull(StringUtils.toInteger("asd"));
+        assertNull(StringUtils.toInteger("12FF"));
+    }
+
+    @Test
+    public void testSplitAndJoin() {
+        assertEquals("", StringUtils.splitAndJoin("1 2 3 4", " ", "-"));
+        assertEquals("1-2-3-4", StringUtils.splitAndJoin("1 2 3 4", " ", "-", 0, 1, 2, 3));
+        assertEquals("4-2-1-3", StringUtils.splitAndJoin("1 2 3 4", " ", "-", 3, 1, 0, 2));
+        assertEquals("1*4", StringUtils.splitAndJoin("1 2 3 4", " ", "*", 0, 3));
+        assertEquals("1*4", StringUtils.splitAndJoin("1 2 3 4", " ", "*", 0, 3, -1, 5));
+    }
 }

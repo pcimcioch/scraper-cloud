@@ -86,7 +86,6 @@ public final class StringUtils {
      * @param bytes byte array
      * @return string in hex format
      */
-    // TODO add tests
     public static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
@@ -103,7 +102,6 @@ public final class StringUtils {
      * @param val value to parse as integer. May be <tt>null</tt>
      * @return integer value or null if it cannot be parsed
      */
-    // TODO add tests
     public static Integer toInteger(String val) {
         try {
             return Integer.valueOf(val);
@@ -122,7 +120,6 @@ public final class StringUtils {
      * @param indexes        indexes of the blocks to join
      * @return new string
      */
-    // TODO add tests
     public static String splitAndJoin(String val, String delimiterRegex, String joinSequence, int... indexes) {
         String[] splitted = val.split(delimiterRegex);
 
@@ -130,10 +127,10 @@ public final class StringUtils {
         boolean first = true;
         for (int index : indexes) {
             if (index >= 0 && index < splitted.length) {
-                joined.append(splitted[index]);
                 if (!first) {
                     joined.append(joinSequence);
                 }
+                joined.append(splitted[index]);
                 first = false;
             }
         }

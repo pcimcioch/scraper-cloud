@@ -39,44 +39,44 @@ public class ThreadParser {
     private static final String SIZE_REGEX = ".* (\\d+)x(\\d+).*";
 
     /**
-     * Parse thread DOM {@code document} to new {@link ThreadDs} instance.
+     * Parses thread DOM {@code document} to new {@link ThreadDs} instance.
      *
-     * @param document document with thread webpage
+     * @param threadDom document with thread webpage
      * @return created thread
      */
-    public ThreadDs parseThread(Document document) throws IOException {
-        ThreadDs thread = buildThread(document);
-        thread.addPosts(buildPosts(document));
+    public ThreadDs parseThread(Document threadDom) throws IOException {
+        ThreadDs thread = buildThread(threadDom);
+        thread.addPosts(buildPosts(threadDom));
 
         return thread;
     }
 
-    private ThreadDs buildThread(Document document) {
-        String threadId = extractThreadId(document);
-        String board = extractBoardTitle(document);
-        String subject = extractSubject(document);
+    private ThreadDs buildThread(Document threadDom) {
+        String threadId = extractThreadId(threadDom);
+        String board = extractBoardTitle(threadDom);
+        String subject = extractSubject(threadDom);
 
         return new ThreadDs(threadId, board, subject);
     }
 
-    private String extractThreadId(Element element) {
-        Element elem = element.select("link[rel=canonical]").first();
+    private String extractThreadId(Element threadDom) {
+        Element elem = threadDom.select("link[rel=canonical]").first();
         return elem == null ? "" : StringUtils.getSingleMatch(elem.absUrl("href"), THREAD_ID_REGEX, 1, "");
     }
 
-    private String extractBoardTitle(Element element) {
-        Element elem = element.select("title").first();
+    private String extractBoardTitle(Element threadDom) {
+        Element elem = threadDom.select("title").first();
         String fullBoard = elem == null ? "" : elem.text();
         return StringUtils.getSingleMatch(fullBoard, BOARD_REGEX, 1, "");
     }
 
-    private String extractSubject(Element element) {
-        Element elem = element.select("span.subject").first();
+    private String extractSubject(Element threadDom) {
+        Element elem = threadDom.select("span.subject").first();
         return elem == null ? "" : elem.text();
     }
 
-    private List<PostDs> buildPosts(Element element) {
-        Elements postElements = element.select("div.post");
+    private List<PostDs> buildPosts(Element threadDom) {
+        Elements postElements = threadDom.select("div.post");
 
         List<PostDs> posts = new ArrayList<>(postElements.size());
         for (Element el : postElements) {
@@ -89,9 +89,9 @@ public class ThreadParser {
         return posts;
     }
 
-    private Map<String, List<String>> extractReplies(Collection<Element> elements) {
+    private Map<String, List<String>> extractReplies(Collection<Element> postElements) {
         Map<String, List<String>> replies = new HashMap<>();
-        for (Element element : elements) {
+        for (Element element : postElements) {
             List<String> replyIds = extractReplies(element);
             if (!replyIds.isEmpty()) {
                 String postId = extractPostId(element);
@@ -113,30 +113,30 @@ public class ThreadParser {
         }
     }
 
-    private PostDs buildPostBase(Element element) {
-        String author = extractAuthor(element);
-        Date date = extractDate(element);
-        String postId = extractPostId(element);
-        String comment = extractComment(element);
-        String fileName = extractFileName(element);
-        String md5 = extractMd5(element);
-        String fileLink = extractFileLink(element);
-        String thumbnailLink = extractThumbnailLink(element);
-        String extension = extractExtension(element);
-        Integer length = extractLength(element);
-        Integer width = extractWidth(element);
-        String size = extractSize(element);
+    private PostDs buildPostBase(Element postElement) {
+        String author = extractAuthor(postElement);
+        Date date = extractDate(postElement);
+        String postId = extractPostId(postElement);
+        String comment = extractComment(postElement);
+        String fileName = extractFileName(postElement);
+        String md5 = extractMd5(postElement);
+        String fileLink = extractFileLink(postElement);
+        String thumbnailLink = extractThumbnailLink(postElement);
+        String extension = extractExtension(postElement);
+        Integer length = extractLength(postElement);
+        Integer width = extractWidth(postElement);
+        String size = extractSize(postElement);
 
         return new PostDs(author, date, postId, comment, fileName, md5, fileLink, thumbnailLink, extension, length, width, size);
     }
 
-    private String extractAuthor(Element element) {
-        Element elem = element.select("div.postInfo span.nameBlock span.name").first();
+    private String extractAuthor(Element postElement) {
+        Element elem = postElement.select("div.postInfo span.nameBlock span.name").first();
         return elem == null ? "" : elem.text();
     }
 
-    private Date extractDate(Element element) {
-        Element elem = element.select("div.postInfo span.dateTime").first();
+    private Date extractDate(Element postElement) {
+        Element elem = postElement.select("div.postInfo span.dateTime").first();
         String dateStr = elem == null ? "" : elem.text();
 
         try {
@@ -146,58 +146,58 @@ public class ThreadParser {
         }
     }
 
-    private String extractPostId(Element element) {
-        Element elem = element.select("div.postInfo input").first();
+    private String extractPostId(Element postElement) {
+        Element elem = postElement.select("div.postInfo input").first();
         return elem == null ? "" : elem.attr("name");
     }
 
-    private String extractComment(Element element) {
-        Element elem = element.select("blockquote.postMessage").first();
+    private String extractComment(Element postElement) {
+        Element elem = postElement.select("blockquote.postMessage").first();
         return elem == null ? "" : elem.text();
     }
 
-    private String extractFileName(Element element) {
-        Element elem = element.select("div.file div.fileText a").first();
+    private String extractFileName(Element postElement) {
+        Element elem = postElement.select("div.file div.fileText a").first();
         return elem == null ? "" : elem.text();
     }
 
-    private String extractMd5(Element element) {
-        Element elem = element.select("div.file a.fileThumb img").first();
+    private String extractMd5(Element postElement) {
+        Element elem = postElement.select("div.file a.fileThumb img").first();
         return elem == null ? "" : elem.attr("data-md5");
     }
 
-    private String extractFileLink(Element element) {
-        Element elem = element.select("div.file div.fileText a").first();
+    private String extractFileLink(Element postElement) {
+        Element elem = postElement.select("div.file div.fileText a").first();
         return elem == null ? "" : elem.absUrl("href");
     }
 
-    private String extractThumbnailLink(Element element) {
-        Element elem = element.select("div.file a.fileThumb img").first();
+    private String extractThumbnailLink(Element postElement) {
+        Element elem = postElement.select("div.file a.fileThumb img").first();
         return elem == null ? "" : elem.absUrl("src");
     }
 
-    private String extractExtension(Element element) {
-        Element elem = element.select("div.file div.mFileInfo").first();
+    private String extractExtension(Element postElement) {
+        Element elem = postElement.select("div.file div.mFileInfo").first();
         return elem == null ? "" : StringUtils.splitAndJoin(elem.text(), " ", "", 2);
     }
 
-    private String extractSize(Element element) {
-        Element elem = element.select("div.file div.mFileInfo").first();
+    private String extractSize(Element postElement) {
+        Element elem = postElement.select("div.file div.mFileInfo").first();
         return elem == null ? "" : StringUtils.splitAndJoin(elem.text(), " ", "", 0, 1);
     }
 
-    private Integer extractWidth(Element element) {
-        Element elem = element.select("div.file div.fileText").first();
+    private Integer extractWidth(Element postElement) {
+        Element elem = postElement.select("div.file div.fileText").first();
         return elem == null ? null : StringUtils.toInteger(StringUtils.getSingleMatch(elem.text(), SIZE_REGEX, 1));
     }
 
-    private Integer extractLength(Element element) {
-        Element elem = element.select("div.file div.fileText").first();
+    private Integer extractLength(Element postElement) {
+        Element elem = postElement.select("div.file div.fileText").first();
         return elem == null ? null : StringUtils.toInteger(StringUtils.getSingleMatch(elem.text(), SIZE_REGEX, 2));
     }
 
-    private List<String> extractReplies(Element element) {
-        Elements elems = element.select("blockquote.postMessage a.quotelink");
+    private List<String> extractReplies(Element postElement) {
+        Elements elems = postElement.select("blockquote.postMessage a.quotelink");
         return FuncUtils.map(elems, el -> el.text().substring(2));
     }
 }
