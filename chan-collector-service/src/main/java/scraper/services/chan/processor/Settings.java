@@ -1,5 +1,6 @@
 package scraper.services.chan.processor;
 
+import scraper.common.Utils;
 import scraper.properties.number.NumberProperty;
 import scraper.properties.string.StringProperty;
 
@@ -56,5 +57,24 @@ public class Settings {
      */
     public void setMaxPages(Integer maxPages) {
         this.maxPages = maxPages;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Settings other = (Settings) o;
+
+        return Utils.computeEq(boardName, other.boardName, maxPages, other.maxPages);
+    }
+
+    @Override
+    public int hashCode() {
+        return Utils.computeHash(boardName, maxPages);
     }
 }

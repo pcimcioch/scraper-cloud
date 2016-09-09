@@ -5,35 +5,28 @@ import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import scraper.services.chan.model.CollectorProcessedCheckpointDs;
-import scraper.services.chan.model.ThreadDs;
 import scraper.services.chan.repository.CollectorProcessedCheckpointDsRepository;
-import scraper.services.chan.repository.ThreadDsRepository;
 import scraper.services.chan.web.WebService;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Service responsible for collecting / scraping data from 4chan archive.
  */
-// TODO add tests
 @Service
 public class BoardCollector {
 
-    private final PageParser pageParser;
+    private final PageCollector pageParser;
 
     private final WebService webService;
 
     private final CollectorProcessedCheckpointDsRepository checkpointRepository;
 
-    private final ThreadDsRepository threadRepository;
-
     @Autowired
-    public BoardCollector(PageParser pageParser, WebService webService, CollectorProcessedCheckpointDsRepository checkpointRepository, ThreadDsRepository threadRepository) {
+    public BoardCollector(PageCollector pageParser, WebService webService, CollectorProcessedCheckpointDsRepository checkpointRepository) {
         this.pageParser = pageParser;
         this.webService = webService;
         this.checkpointRepository = checkpointRepository;
-        this.threadRepository = threadRepository;
     }
 
     /**
@@ -53,27 +46,19 @@ public class BoardCollector {
         do {
             page = getPage(currentPageIndx, settings);
             if (page != null) {
-                saveThreads(pageParser.parsePage(page, settings));
-                ++currentPageIndx;
-                checkpoint.setLastPageIndx(currentPageIndx);
-                checkpointRepository.save(checkpoint);
+                pageParser.parsePage(page, settings);
+                if (currentPageIndx != startPageIndx) {
+                    checkpoint.setLastPageIndx(currentPageIndx);
+                    checkpointRepository.save(checkpoint);
+                }
             }
+            ++currentPageIndx;
         } while (page != null && (maxPages == null || currentPageIndx < startPageIndx + settings.getMaxPages()));
     }
 
     private CollectorProcessedCheckpointDs getCheckpoint(Settings settings) {
         CollectorProcessedCheckpointDs checkpoint = checkpointRepository.findByBoardName(settings.getBoardName());
         return checkpoint == null ? checkpointRepository.save(new CollectorProcessedCheckpointDs(settings.getBoardName(), 1)) : checkpoint;
-    }
-
-    private void saveStartingPageIndex(int lastPageIndx, Settings settings) {
-        CollectorProcessedCheckpointDs checkpoint = checkpointRepository.findByBoardName(settings.getBoardName());
-        if (checkpoint == null) {
-            checkpointRepository.save(new CollectorProcessedCheckpointDs(settings.getBoardName(), lastPageIndx));
-        } else {
-            checkpoint.setLastPageIndx(lastPageIndx);
-            checkpointRepository.save(checkpoint);
-        }
     }
 
     private Document getPage(int pageIndx, Settings settings) throws IOException {
@@ -84,9 +69,5 @@ public class BoardCollector {
             // response with error status - just finish
             return null;
         }
-    }
-
-    private void saveThreads(List<ThreadDs> threads) {
-        threadRepository.save(threads);
     }
 }

@@ -114,7 +114,6 @@ public final class FileUtils {
      * @throws NoSuchAlgorithmException if could not find sha-256 algorithm
      * @throws IOException              if io failed
      */
-    // TODO add tests
     public static String computeSHA2(Path file) throws NoSuchAlgorithmException, IOException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
 

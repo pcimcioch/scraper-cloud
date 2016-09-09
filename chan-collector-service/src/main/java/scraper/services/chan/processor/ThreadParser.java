@@ -30,8 +30,6 @@ import static scraper.common.FuncUtils.mapFilter;
 @Service
 public class ThreadParser {
 
-    private static final String BOARD_REGEX = "(?s)\\/(.*?)\\/.*";
-
     private static final String THREAD_ID_REGEX = ".*thread\\/([0-9]+)\\/.*";
 
     private static final String DATE_FORMAT = "MM/dd/yy(EEE)HH:mm:ss";
@@ -42,18 +40,19 @@ public class ThreadParser {
      * Parses thread DOM {@code document} to new {@link ThreadDs} instance.
      *
      * @param threadDom document with thread webpage
+     * @param settings  collection settings
      * @return created thread
      */
-    public ThreadDs parseThread(Document threadDom) throws IOException {
-        ThreadDs thread = buildThread(threadDom);
+    public ThreadDs parseThread(Document threadDom, Settings settings) throws IOException {
+        ThreadDs thread = buildThread(threadDom, settings);
         thread.addPosts(buildPosts(threadDom));
 
         return thread;
     }
 
-    private ThreadDs buildThread(Document threadDom) {
+    private ThreadDs buildThread(Document threadDom, Settings settings) {
         String threadId = extractThreadId(threadDom);
-        String board = extractBoardTitle(threadDom);
+        String board = settings.getBoardName();
         String subject = extractSubject(threadDom);
 
         return new ThreadDs(threadId, board, subject);
@@ -62,12 +61,6 @@ public class ThreadParser {
     private String extractThreadId(Element threadDom) {
         Element elem = threadDom.select("link[rel=canonical]").first();
         return elem == null ? "" : StringUtils.getSingleMatch(elem.absUrl("href"), THREAD_ID_REGEX, 1, "");
-    }
-
-    private String extractBoardTitle(Element threadDom) {
-        Element elem = threadDom.select("title").first();
-        String fullBoard = elem == null ? "" : elem.text();
-        return StringUtils.getSingleMatch(fullBoard, BOARD_REGEX, 1, "");
     }
 
     private String extractSubject(Element threadDom) {

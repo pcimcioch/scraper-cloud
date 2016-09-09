@@ -112,16 +112,33 @@ public class FileUtilsTest {
     public void testReadFile() throws IOException {
         // given
         String savedContent = "Some Content\nAnd other stuff";
-        Path path = fs.getPath("file.txt");
-        Files.createFile(path);
-        try (OutputStream out = Files.newOutputStream(path)) {
+        Path file = fs.getPath("file.txt");
+        Files.createFile(file);
+        try (OutputStream out = Files.newOutputStream(file)) {
             out.write(savedContent.getBytes(StandardCharsets.UTF_8));
         }
 
         // when
-        String content = FileUtils.readFile(path, StandardCharsets.UTF_8);
+        String content = FileUtils.readFile(file, StandardCharsets.UTF_8);
 
         // then
         assertEquals(savedContent, content);
+    }
+
+    @Test
+    public void testComputeSHA2() throws Exception {
+        // given
+        String savedContent = "Some Content\nAnd other stuff";
+        Path file = fs.getPath("file.txt");
+        Files.createFile(file);
+        try (OutputStream out = Files.newOutputStream(file)) {
+            out.write(savedContent.getBytes(StandardCharsets.UTF_8));
+        }
+
+        // when
+        String sha2 = FileUtils.computeSHA2(file);
+
+        // then
+        assertEquals("0A11CD8C9DD8E6677C357CEEFD93714B376C3657CAB1D27D6173DAD72ECB3452", sha2);
     }
 }

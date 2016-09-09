@@ -29,10 +29,11 @@ public class ThreadParserTest {
     @Test
     public void testSimpleThread() throws IOException {
         // given
-        Document document = getDocument("/scraper/services/chan/processor/thread1.html");
+        Document threadDom = getDocument("/scraper/services/chan/processor/thread1.html");
+        Settings settings = new Settings("wg", null);
 
         // when
-        ThreadDs thread = parser.parseThread(document);
+        ThreadDs thread = parser.parseThread(threadDom, settings);
 
         // then
         assertThread(thread, "6474195", "wg", "", Utils.set("6474195", "6474196", "6474197", "6474283", "6474293"));
@@ -60,9 +61,10 @@ public class ThreadParserTest {
     public void testComplexThread() throws IOException {
         // given
         Document document = getDocument("/scraper/services/chan/processor/thread2.html");
+        Settings settings = new Settings("wg", null);
 
         // when
-        ThreadDs thread = parser.parseThread(document);
+        ThreadDs thread = parser.parseThread(document, settings);
 
         // then
         assertThread(thread, "6480486", "wg", "MERICA'N WALLPAPERS!", Utils.set("6480486", "6480524", "6481166", "6481167", "6481219", "6481249", "6481250", "6481251", "6481730"));

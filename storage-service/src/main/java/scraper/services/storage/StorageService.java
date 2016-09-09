@@ -10,9 +10,10 @@ import scraper.exception.ResourceNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -22,11 +23,18 @@ import java.security.NoSuchAlgorithmException;
 @RefreshScope
 public class StorageService {
 
-    private final String dataDir;
+    private final Path dataPath;
+
+    private final Path tempPath;
 
     @Autowired
-    public StorageService(@Value("${scraper.service.storage.dir:data}") String dataDir) {
-        this.dataDir = dataDir;
+    public StorageService(@Value("${scraper.service.storage.dir:data}") String dataDir, @Value("${scraper.service.storage.temp:temp}") String tempDir, FileSystem fs)
+            throws IOException {
+        this.dataPath = fs.getPath(dataDir);
+        this.tempPath = fs.getPath(tempDir);
+
+        Files.createDirectories(dataPath);
+        Files.createDirectories(tempPath);
     }
 
     /**
@@ -37,11 +45,10 @@ public class StorageService {
      * @throws IOException              id io failed
      * @throws NoSuchAlgorithmException if sha algorithm is not supported
      */
-    // TODO add tests
     public String saveFile(InputStream inputStream) throws IOException, NoSuchAlgorithmException {
         Path tempFile = createTemp();
         try {
-            Files.copy(inputStream, tempFile);
+            Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
             String sha = FileUtils.computeSHA2(tempFile);
             saveIfMissing(tempFile, sha);
 
@@ -52,7 +59,7 @@ public class StorageService {
     }
 
     private Path createTemp() throws IOException {
-        return Files.createTempFile("upload", "tmp");
+        return Files.createTempFile(tempPath, "upload", "tmp");
     }
 
     private void saveIfMissing(Path tempFile, String sha) throws IOException {
@@ -65,14 +72,14 @@ public class StorageService {
             return;
         }
 
-        Files.copy(tempFile, path);
+        Files.copy(tempFile, path, StandardCopyOption.REPLACE_EXISTING);
     }
 
     private Path getPathForSha(String sha) {
         String firstTwoChars = sha.substring(0, 2);
         String secondTwoChars = sha.substring(2, 4);
 
-        return Paths.get(dataDir, firstTwoChars, secondTwoChars, sha);
+        return dataPath.resolve(firstTwoChars).resolve(secondTwoChars).resolve(sha);
     }
 
     /**
@@ -84,7 +91,6 @@ public class StorageService {
      * @throws IllegalArgumentException  if id has incorrect form
      * @throws ResourceNotFoundException if file with given id does not exist
      */
-    // TODO add tests
     public Path getFile(String id) throws IOException {
         if (id.length() < 5) {
             throw new IllegalArgumentException("Resource id " + id + " too short");

@@ -15,11 +15,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Service responsible for parsing DOM document of one 4chan archive page to list of {@link ThreadDs}.
+ * Service responsible for parsing DOM document of one 4chan archive page to list and save {@link ThreadDs}.
  */
-// TODO add tests
 @Service
-public class PageParser {
+public class PageCollector {
 
     private final WebService webService;
 
@@ -28,7 +27,7 @@ public class PageParser {
     private final ThreadDsRepository threadRepository;
 
     @Autowired
-    public PageParser(WebService webService, ThreadParser threadParser, ThreadDsRepository threadRepository) {
+    public PageCollector(WebService webService, ThreadParser threadParser, ThreadDsRepository threadRepository) {
         this.webService = webService;
         this.threadParser = threadParser;
         this.threadRepository = threadRepository;
@@ -39,20 +38,17 @@ public class PageParser {
      *
      * @param pageDom  page document
      * @param settings collection settings
-     * @return list of scrapped threads
      * @throws IOException if io failed
      */
-    public List<ThreadDs> parsePage(Document pageDom, Settings settings) throws IOException {
+    public void parsePage(Document pageDom, Settings settings) throws IOException {
         Set<String> threadIds = extractThreadIds(pageDom);
         List<ThreadDs> threads = new ArrayList<>(threadIds.size());
         for (String threadId : threadIds) {
             ThreadDs thread = getThread(threadId, settings);
             if (thread != null) {
-                threads.add(thread);
+                threadRepository.save(thread);
             }
         }
-
-        return threads;
     }
 
     private Set<String> extractThreadIds(Document pageDom) {
@@ -61,12 +57,12 @@ public class PageParser {
     }
 
     private ThreadDs getThread(String threadId, Settings settings) throws IOException {
-        if (threadRepository.findByThreadId(threadId) != null /* TODO Optimize not to obtain whole thread*/) {
+        if (threadRepository.findIdByThreadId(threadId) != null) {
             return null;
         }
         Document threadWebPage = getThreadWebPage(threadId, settings);
 
-        return threadParser.parseThread(threadWebPage);
+        return threadParser.parseThread(threadWebPage, settings);
     }
 
     private Document getThreadWebPage(String threadId, Settings settings) throws IOException {
