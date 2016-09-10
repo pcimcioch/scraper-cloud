@@ -11,6 +11,6 @@ public interface ThreadDsRepository extends CrudRepository<ThreadDs, Long> {
 
     ThreadDs findByThreadId(String threadId);
 
-    @Query("MATCH (n:ThreadDs {threadId:{threadId}}) RETURN n.id")
+    @Query("MATCH (n:ThreadDs {threadId:{0}}) RETURN n.id")
     Long findIdByThreadId(String threadId);
 }

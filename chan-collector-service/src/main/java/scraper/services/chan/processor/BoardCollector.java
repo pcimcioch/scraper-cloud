@@ -1,5 +1,7 @@
 package scraper.services.chan.processor;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jsoup.HttpStatusException;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import java.io.IOException;
  */
 @Service
 public class BoardCollector {
+
+    private final Log logger = LogFactory.getLog(BoardCollector.class);
 
     private final PageCollector pageParser;
 
@@ -63,6 +67,7 @@ public class BoardCollector {
 
     private Document getPage(int pageIndx, Settings settings) throws IOException {
         String url = String.format("https://yuki.la/%s/page/%d", settings.getBoardName(), pageIndx);
+        logger.info(String.format("Parsing page [%d] of board [%s]", pageIndx, settings.getBoardName()));
         try {
             return webService.getDocument(url);
         } catch (HttpStatusException ex) {

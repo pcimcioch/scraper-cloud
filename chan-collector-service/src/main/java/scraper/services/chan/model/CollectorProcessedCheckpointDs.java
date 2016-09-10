@@ -5,7 +5,9 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import scraper.common.Utils;
 
-// TODO add javadoc
+/**
+ * Neo4j entity representing last collection checkpoint for board.
+ */
 @NodeEntity
 public class CollectorProcessedCheckpointDs {
 

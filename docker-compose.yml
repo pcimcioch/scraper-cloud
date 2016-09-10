@@ -12,7 +12,7 @@ services:
     depends_on:
      - config-server
 
-  neo4j-data:
+  chan-neo4j-data:
     image: neo4j:3.0.4
  
   main-gateway:

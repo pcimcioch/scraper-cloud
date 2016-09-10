@@ -1,5 +1,7 @@
 package scraper.services.chan.processor;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import java.util.Set;
  */
 @Service
 public class PageCollector {
+
+    private final Log logger = LogFactory.getLog(PageCollector.class);
 
     private final WebService webService;
 
@@ -67,6 +71,7 @@ public class PageCollector {
 
     private Document getThreadWebPage(String threadId, Settings settings) throws IOException {
         String url = String.format("https://yuki.la/%s/%s", settings.getBoardName(), threadId);
+        logger.info(String.format("Getting thread [%s] of board [%s]", threadId, settings.getBoardName()));
         return webService.getDocument(url);
     }
 }
