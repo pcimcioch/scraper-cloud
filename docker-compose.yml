@@ -14,6 +14,8 @@ services:
 
   chan-neo4j-data:
     image: neo4j:3.0.4
+    environment: 
+      - NEO4J_AUTH=neo4j/password
  
   main-gateway:
     build: main-gateway

@@ -2,8 +2,10 @@ server:
   port: 8888
 
 spring:
+  profiles:
+    active: native
   cloud:
     config:
       server:
-        git:
-          uri: https://github.com/pcimcioch/scraper-cloud-config.git
+        native:
+          searchLocations: config-server/config

@@ -4,6 +4,8 @@ import scraper.common.Utils;
 import scraper.properties.number.NumberProperty;
 import scraper.properties.string.StringProperty;
 
+import static org.bouncycastle.asn1.x500.style.RFC4519Style.o;
+
 /**
  * Settings for 4chan collector.
  */
@@ -60,15 +62,15 @@ public class Settings {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
 
-        Settings other = (Settings) o;
+        Settings other = (Settings) obj;
 
         return Utils.computeEq(boardName, other.boardName, maxPages, other.maxPages);
     }

@@ -1,0 +1,5 @@
+scraper:
+  service:
+    storage:
+      dir: data
+      temp: temp
