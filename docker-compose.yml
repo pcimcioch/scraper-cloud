@@ -39,6 +39,7 @@ services:
 
   chan-collector-service:
     build: chan-collector-service
+    dns: 8.8.8.8
     depends_on:
      - config-server
      - discovery-server

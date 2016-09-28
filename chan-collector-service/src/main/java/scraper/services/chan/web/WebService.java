@@ -39,6 +39,6 @@ public class WebService {
     }
 
     private Document getStandardResponse(String url) throws IOException {
-        return Jsoup.connect(url).userAgent(userAgent).referrer(referrer).timeout(timeout).get();
+        return Jsoup.connect(url).userAgent(userAgent).referrer(referrer).timeout(timeout).validateTLSCertificates(false).get();
     }
 }
