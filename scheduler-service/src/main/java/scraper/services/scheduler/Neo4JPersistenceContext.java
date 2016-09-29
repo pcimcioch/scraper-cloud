@@ -1,4 +1,4 @@
-package scraper.services.chan;
+package scraper.services.scheduler;
 
 import org.neo4j.ogm.session.SessionFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +10,7 @@ import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
  * Configuration of neo4j database.
  */
 @Configuration
-@EnableNeo4jRepositories("scraper.services.chan.repository")
+@EnableNeo4jRepositories("scraper.services.scheduler.repository")
 public class Neo4JPersistenceContext extends Neo4jConfiguration {
 
     public static final String NEO4J_DRIVER = "org.neo4j.ogm.drivers.http.driver.HttpDriver";
@@ -37,6 +37,6 @@ public class Neo4JPersistenceContext extends Neo4jConfiguration {
 
     @Override
     public SessionFactory getSessionFactory() {
-        return new SessionFactory(getConfiguration(), "scraper.services.chan.model", "BOOT-INF.classes.scraper.services.chan.model");
+        return new SessionFactory(getConfiguration(), "scraper.services.scheduler.model", "BOOT-INF.classes.scraper.services.scheduler.model");
     }
 }

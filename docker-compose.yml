@@ -1,11 +1,14 @@
 version: '2'
+
 services:
   config-server:
+    restart: on-failure:3
     build: config-server
     ports:
      - "8888:8888"
 
   discovery-server:
+    restart: on-failure:3
     build: discovery-server
     ports:
      - "8761:8761"
@@ -13,11 +16,13 @@ services:
      - config-server
 
   chan-neo4j-data:
+    restart: on-failure:3
     image: neo4j:3.0.4
     environment: 
       - NEO4J_AUTH=neo4j/password
  
   main-gateway:
+    restart: on-failure:3
     build: main-gateway
     ports:
      - "8080:8080"
@@ -26,18 +31,21 @@ services:
      - discovery-server
 
   scheduler-service:
+    restart: on-failure:3
     build: scheduler-service
     depends_on:
      - config-server
      - discovery-server
 
   storage-service:
+    restart: on-failure:3
     build: storage-service
     depends_on:
      - config-server
      - discovery-server
 
   chan-collector-service:
+    restart: on-failure:3
     build: chan-collector-service
     dns: 8.8.8.8
     depends_on:
