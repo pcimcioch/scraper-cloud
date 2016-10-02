@@ -1,5 +1,6 @@
 package scraper.services.scheduler.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import scraper.common.Utils;
 
 /**
@@ -13,13 +14,13 @@ public class ServiceDescriptorJsonDto {
 
     private String description;
 
-    private String propertyDescriptorJson;
+    private JsonNode propertyDescriptor;
 
-    public ServiceDescriptorJsonDto(String name, String serviceId, String description, String propertyDescriptorJson) {
+    public ServiceDescriptorJsonDto(String name, String serviceId, String description, JsonNode propertyDescriptor) {
         setName(name);
         setServiceId(serviceId);
         setDescription(description);
-        setPropertyDescriptorJson(propertyDescriptorJson);
+        setPropertyDescriptor(propertyDescriptor);
     }
 
     public String getName() {
@@ -46,12 +47,12 @@ public class ServiceDescriptorJsonDto {
         this.description = description;
     }
 
-    public String getPropertyDescriptorJson() {
-        return propertyDescriptorJson;
+    public JsonNode getPropertyDescriptor() {
+        return propertyDescriptor;
     }
 
-    public void setPropertyDescriptorJson(String propertyDescriptorJson) {
-        this.propertyDescriptorJson = propertyDescriptorJson;
+    public void setPropertyDescriptor(JsonNode propertyDescriptor) {
+        this.propertyDescriptor = propertyDescriptor;
     }
 
     @Override
@@ -65,12 +66,12 @@ public class ServiceDescriptorJsonDto {
 
         ServiceDescriptorJsonDto other = (ServiceDescriptorJsonDto) obj;
 
-        return Utils.computeEq(name, other.name, serviceId, other.serviceId, description, other.description, propertyDescriptorJson, other.propertyDescriptorJson);
+        return Utils.computeEq(name, other.name, serviceId, other.serviceId, description, other.description, propertyDescriptor, other.propertyDescriptor);
 
     }
 
     @Override
     public int hashCode() {
-        return Utils.computeHash(name, serviceId, description, propertyDescriptorJson);
+        return Utils.computeHash(name, serviceId, description, propertyDescriptor);
     }
 }

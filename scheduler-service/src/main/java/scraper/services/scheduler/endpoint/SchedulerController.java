@@ -11,21 +11,24 @@ import scraper.services.scheduler.dto.ServiceDescriptorJsonDto;
 import scraper.services.scheduler.dto.ServiceInstanceJsonReadDto;
 import scraper.services.scheduler.dto.ServiceInstanceJsonWriteDto;
 import scraper.services.scheduler.service.SchedulerService;
+import scraper.services.scheduler.service.ServicesStore;
 
 import java.util.List;
 
 /**
  * REST Controller used to manage Runnable Services instances in the application.
  */
-// TODO go through all classes and add javadocs
 @RestController
 public class SchedulerController {
 
     private final SchedulerService schedulerService;
 
+    private final ServicesStore servicesStore;
+
     @Autowired
-    public SchedulerController(SchedulerService schedulerService) {
+    public SchedulerController(SchedulerService schedulerService, ServicesStore servicesStore) {
         this.schedulerService = schedulerService;
+        this.servicesStore = servicesStore;
     }
 
     /**
@@ -35,7 +38,7 @@ public class SchedulerController {
      */
     @RequestMapping(path = "/service", method = RequestMethod.GET)
     public List<ServiceDescriptorJsonDto> getServices() {
-        return schedulerService.getServices();
+        return servicesStore.getServices();
     }
 
     /**

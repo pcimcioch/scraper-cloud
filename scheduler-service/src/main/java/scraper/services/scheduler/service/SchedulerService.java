@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import scraper.common.StringUtils;
 import scraper.exception.ResourceNotFoundException;
 import scraper.exception.ValidationException;
-import scraper.services.scheduler.dto.ServiceDescriptorJsonDto;
 import scraper.services.scheduler.dto.ServiceInstanceJsonReadDto;
 import scraper.services.scheduler.dto.ServiceInstanceJsonWriteDto;
 import scraper.services.scheduler.model.ServiceInstanceDs;
@@ -23,14 +22,11 @@ import static scraper.common.FuncUtils.map;
  * Service used to manage Runnable Services and their instances.
  */
 @Service
-// TODO add tests
 public class SchedulerService {
 
     private static final String INSTANCE_PATTERN = "[a-zA-Z0-9\\.]+";
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
-
-    private final ServicesStore servicesStore;
 
     private final ServiceInstanceDsRepository instanceRepository;
 
@@ -39,8 +35,7 @@ public class SchedulerService {
     private final Scheduler scheduler;
 
     @Autowired
-    public SchedulerService(ServicesStore servicesStore, ServiceInstanceDsRepository instanceRepository, ServiceRunner serviceRunner, Scheduler scheduler) {
-        this.servicesStore = servicesStore;
+    public SchedulerService(ServiceInstanceDsRepository instanceRepository, ServiceRunner serviceRunner, Scheduler scheduler) {
         this.instanceRepository = instanceRepository;
         this.serviceRunner = serviceRunner;
         this.scheduler = scheduler;
@@ -51,15 +46,6 @@ public class SchedulerService {
         for (ServiceInstanceJsonReadDto instance : getServiceInstances()) {
             reschedule(instance.getId(), instance.getSchedule());
         }
-    }
-
-    /**
-     * Gets list of all Runnable Service available in application.
-     *
-     * @return list of available services represented as json DTOs
-     */
-    public List<ServiceDescriptorJsonDto> getServices() {
-        return servicesStore.getServices();
     }
 
     /**
@@ -89,21 +75,6 @@ public class SchedulerService {
         }
 
         serviceRunner.runService(instance);
-    }
-
-    /**
-     * Gets Runnable Service instance.
-     *
-     * @param instanceId service instance id
-     * @return service instance, or <tt>null</tt> if instance with such id can not be found
-     */
-    public ServiceInstanceDs getServiceInstance(long instanceId) {
-        lock.readLock().lock();
-        try {
-            return instanceRepository.findOne(instanceId);
-        } finally {
-            lock.readLock().unlock();
-        }
     }
 
     /**
@@ -192,11 +163,20 @@ public class SchedulerService {
         }
     }
 
+    private ServiceInstanceDs getServiceInstance(long instanceId) {
+        lock.readLock().lock();
+        try {
+            return instanceRepository.findOne(instanceId);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
     private void validateServiceInstance(ServiceInstanceJsonWriteDto instance) {
         String instanceName = instance.getInstanceName();
         String serviceId = instance.getServiceId();
 
-        if (instanceName != null && !instanceName.matches(INSTANCE_PATTERN)) {
+        if (StringUtils.isBlank(instanceName) || !instanceName.matches(INSTANCE_PATTERN)) {
             throw new ValidationException("Instance name [%s] doesn't match allowed pattern: %s", instanceName, INSTANCE_PATTERN);
         }
 
@@ -205,6 +185,7 @@ public class SchedulerService {
         }
     }
 
+    @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private static void validateSchedule(String schedule) {
         if (StringUtils.isBlank(schedule)) {
             return;
