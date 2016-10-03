@@ -51,3 +51,9 @@ services:
     depends_on:
      - config-server
      - discovery-server
+
+  scheduler-ui:
+    restart: on-failure:3
+    build: scheduler-ui
+    depends_on:
+     - scheduler-service

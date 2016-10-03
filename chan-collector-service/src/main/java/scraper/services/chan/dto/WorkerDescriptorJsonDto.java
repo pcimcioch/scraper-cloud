@@ -3,6 +3,9 @@ package scraper.services.chan.dto;
 import scraper.common.Utils;
 import scraper.properties.ClassPropertyDescriptor;
 
+/**
+ * Description of worker service.
+ */
 public class WorkerDescriptorJsonDto {
 
     private final String name;

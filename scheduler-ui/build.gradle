@@ -1,0 +1,12 @@
+apply plugin: 'spring-boot'
+
+jar {
+    baseName = 'scheduler-ui'
+    version = '0.1.0'
+}
+
+dependencies {
+    compile clientCommons
+
+    compile project(':common-service')
+}

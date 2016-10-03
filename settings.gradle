@@ -9,3 +9,5 @@ include 'metamodel-engine'
 include 'storage-service'
 include 'scheduler-service'
 include 'chan-collector-service'
+
+include 'scheduler-ui'

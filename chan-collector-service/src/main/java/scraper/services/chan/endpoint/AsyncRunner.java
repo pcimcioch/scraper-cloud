@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import scraper.services.chan.processor.BoardCollector;
 import scraper.services.chan.processor.Settings;
 
+/**
+ * Service used to run board collection asynchronously.
+ */
 @Component
 public class AsyncRunner {
 
@@ -20,6 +23,11 @@ public class AsyncRunner {
         this.collector = collector;
     }
 
+    /**
+     * Runs board collection asynchronously. Will handle all exceptions.
+     *
+     * @param settings settings for the run
+     */
     @Async
     public void runAsync(Settings settings) {
         try {
