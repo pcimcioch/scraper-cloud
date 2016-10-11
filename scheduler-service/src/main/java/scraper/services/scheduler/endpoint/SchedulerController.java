@@ -1,6 +1,7 @@
 package scraper.services.scheduler.endpoint;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -82,7 +83,7 @@ public class SchedulerController {
      * @param settings   new settings
      * @return status message
      */
-    @RequestMapping(path = "/service/instance/{instanceId}/settings", method = RequestMethod.PUT, consumes = "application/json")
+    @RequestMapping(path = "/service/instance/{instanceId}/settings", method = RequestMethod.PUT, consumes = MediaType.TEXT_PLAIN_VALUE)
     public StatusMessage updateServiceInstanceSettings(@PathVariable("instanceId") long instanceId, @RequestBody String settings) {
         schedulerService.updateServiceInstanceSettings(instanceId, settings);
         return new StatusMessage("Settings Updated");
@@ -95,7 +96,7 @@ public class SchedulerController {
      * @param schedule   new schedule
      * @return status message
      */
-    @RequestMapping(path = "/service/instance/{instanceId}/schedule", method = RequestMethod.PUT, consumes = "text/plain")
+    @RequestMapping(path = "/service/instance/{instanceId}/schedule", method = RequestMethod.PUT, consumes = MediaType.TEXT_PLAIN_VALUE)
     public StatusMessage updateServiceInstanceSchedule(@PathVariable("instanceId") long instanceId, @RequestBody(required = false) String schedule) {
         schedulerService.updateServiceInstanceSchedule(instanceId, schedule);
         return new StatusMessage("Schedule Updated");
@@ -107,7 +108,7 @@ public class SchedulerController {
      * @param serviceInstance new service instance json DTO.
      * @return status message
      */
-    @RequestMapping(path = "/service/instance/", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(path = "/service/instance/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public StatusMessage createServiceInstance(@RequestBody ServiceInstanceJsonWriteDto serviceInstance) {
         schedulerService.addServiceInstance(serviceInstance);
         return new StatusMessage("Added");

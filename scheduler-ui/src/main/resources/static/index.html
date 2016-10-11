@@ -1,7 +1,27 @@
-<html>
+<html data-ng-app="schedulerApp">
 <head>
+    <title>Scheduler</title>
+
+    <link rel="stylesheet" href="thirdparty/bootstrap.css">
+    <link rel="stylesheet" href="thirdparty/angular-cron-jobs.css">
+    <script src="thirdparty/angular-cron-jobs.js"></script>
+    <script src="thirdparty/angular.js"></script>
+    <script src="thirdparty/ui-bootstrap-tpls-2.2.0.js"></script>
+
+    <link rel="stylesheet" href="modules/common/main.css">
+    <script src="modules/common/main.js"></script>
+    <script src="modules/metamodel/metamodel.js"></script>
+    <script src="modules/notification/notificationCtrl.js"></script>
+    <script src="modules/notification/notificationSvc.js"></script>
+
+    <script src="modules/main.js"></script>
+    <link rel="stylesheet" href="modules/main.css">
+    <script src="modules/scheduler/schedulerCtrl.js"></script>
+    <script src="modules/scheduler/schedulerSvc.js"></script>
 </head>
 <body>
-    <b>Hello World</b>
+
+    <ng-include src="'modules/notification/notificationPanel.html'"></ng-include>
+
 </body>
 </html>
