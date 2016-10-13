@@ -1,0 +1,4 @@
+scraper:
+  service:
+    scheduler:
+      pool-size: 5

@@ -21,10 +21,13 @@ frontendApp.controller('schedulerCtrl', ['$scope', 'schedulerSvc', 'notification
     var setServiceInstances = function(instances) {
         $scope.serviceInstances = {};
         for(var i = 0; i< instances.length; ++i) {
-            if($scope.serviceInstances[instances[i].serviceId]) {
-                $scope.serviceInstances[instances[i].serviceId].push(instances[i]);
+            var instance = instances[i];
+            instance.settings = JSON.parse(instance.settings);
+
+            if($scope.serviceInstances[instance.serviceId]) {
+                $scope.serviceInstances[instance.serviceId].push(instance);
             } else {
-                $scope.serviceInstances[instances[i].serviceId] = [instances[i]];
+                $scope.serviceInstances[instance.serviceId] = [instance];
             }
         }
     };
@@ -40,13 +43,13 @@ frontendApp.controller('schedulerCtrl', ['$scope', 'schedulerSvc', 'notification
     };
 
     $scope.createServiceInstance = function(serviceId, instance, settings, schedule) {
-        notificationSvc.wrap(schedulerSvc.createServiceInstance(serviceId, instance, settings, schedule), null, 'Error creating service instance', function() {
+        notificationSvc.wrap(schedulerSvc.createServiceInstance(serviceId, instance, JSON.stringify(settings), schedule), null, 'Error creating service instance', function() {
             $scope.refreshServiceInstances();
         });
     };
 
     $scope.updateServiceInstanceSettings = function(id, settings) {
-        notificationSvc.wrap(schedulerSvc.updateServiceInstanceSettings(id, settings), 'Settings updated', 'Error updating service instance settings', function() {
+        notificationSvc.wrap(schedulerSvc.updateServiceInstanceSettings(id, JSON.stringify(settings)), 'Settings updated', 'Error updating service instance settings', function() {
             $scope.refreshServiceInstances();
         });
     };
