@@ -57,7 +57,7 @@ public class BoardCollector {
                 }
             }
             ++currentPageIndx;
-        } while (page != null && (maxPages == null || currentPageIndx < startPageIndx + settings.getMaxPages()));
+        } while (page != null && (maxPages == null || currentPageIndx < startPageIndx + maxPages));
     }
 
     private CollectorProcessedCheckpointDs getCheckpoint(Settings settings) {
