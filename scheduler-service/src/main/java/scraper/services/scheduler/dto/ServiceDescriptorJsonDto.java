@@ -16,6 +16,9 @@ public class ServiceDescriptorJsonDto {
 
     private JsonNode propertyDescriptor;
 
+    public ServiceDescriptorJsonDto() {
+    }
+
     public ServiceDescriptorJsonDto(String name, String serviceId, String description, JsonNode propertyDescriptor) {
         setName(name);
         setServiceId(serviceId);

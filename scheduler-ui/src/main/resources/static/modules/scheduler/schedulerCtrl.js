@@ -33,7 +33,7 @@ frontendApp.controller('schedulerCtrl', ['$scope', 'schedulerSvc', 'notification
     };
 
     $scope.runServiceInstance = function(id) {
-        notificationSvc.wrap(schedulerSvc.runServiceInstance(id), null, 'Error running service instance');
+        notificationSvc.wrap(schedulerSvc.runServiceInstance(id), "Instance started", 'Error running service instance');
     };
 
     $scope.deleteServiceInstance = function(id) {

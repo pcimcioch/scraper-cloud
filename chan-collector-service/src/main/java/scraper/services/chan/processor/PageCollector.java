@@ -45,6 +45,8 @@ public class PageCollector {
      * @throws IOException if io failed
      */
     public void parsePage(Document pageDom, Settings settings) throws IOException {
+        logger.info(String.format("Parsing page [%s] started", pageDom.baseUri()));
+
         Set<String> threadIds = extractThreadIds(pageDom);
         List<ThreadDs> threads = new ArrayList<>(threadIds.size());
         for (String threadId : threadIds) {
@@ -53,6 +55,8 @@ public class PageCollector {
                 threadRepository.save(thread);
             }
         }
+
+        logger.info(String.format("Parsing page [%s] finished", pageDom.baseUri()));
     }
 
     private Set<String> extractThreadIds(Document pageDom) {
@@ -71,7 +75,6 @@ public class PageCollector {
 
     private Document getThreadWebPage(String threadId, Settings settings) throws IOException {
         String url = String.format("https://yuki.la/%s/%s", settings.getBoardName(), threadId);
-        logger.info(String.format("Getting thread [%s] of board [%s]", threadId, settings.getBoardName()));
         return webService.getDocument(url);
     }
 }

@@ -20,7 +20,7 @@ import java.io.IOException;
 public class ChanCollectorController {
 
     private final WorkerDescriptorJsonDto metadata =
-            new WorkerDescriptorJsonDto("Chan Collector", "4CHan boards Collector", ClassPropertyDescriptorFactory.buildClassPropertyDescriptor(Settings.class, new Settings()));
+            new WorkerDescriptorJsonDto("Chan Collector", "4Chan boards Collector", ClassPropertyDescriptorFactory.buildClassPropertyDescriptor(Settings.class, new Settings()));
 
     private final AsyncRunner runner;
 

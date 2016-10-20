@@ -1,5 +1,7 @@
 package scraper.services.chan.processor;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -30,6 +32,8 @@ import static scraper.common.FuncUtils.mapFilter;
 @Service
 public class ThreadParser {
 
+    private final Log logger = LogFactory.getLog(ThreadParser.class);
+
     private static final String THREAD_ID_REGEX = ".*thread\\/([0-9]+)\\/.*";
 
     private static final String DATE_FORMAT = "MM/dd/yy(EEE)HH:mm:ss";
@@ -44,9 +48,13 @@ public class ThreadParser {
      * @return created thread
      */
     public ThreadDs parseThread(Document threadDom, Settings settings) throws IOException {
+        logger.info(String.format("Parsing thread [%s] started", threadDom.baseUri()));
+
         ThreadDs thread = buildThread(threadDom, settings);
         thread.addPosts(buildPosts(threadDom));
 
+
+        logger.info(String.format("Parsing thread [%s] finished", threadDom.baseUri()));
         return thread;
     }
 
